@@ -10,6 +10,15 @@
 !.yarn/releases
 !.yarn/versions
 
+# Node.js
+node_modules/
+.next/
+.env.local
+.DS_Store
+.cache/
+yarn.lock
+package-lock.json
+
 # testing
 /coverage
 
