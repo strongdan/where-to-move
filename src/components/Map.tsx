@@ -1,24 +1,21 @@
-"use client";
+// src/components/Map.tsx
+import { MapContainer, Marker, Popup, TileLayer, Tooltip } from "react-leaflet"
+import "leaflet/dist/leaflet.css"
+import "leaflet-defaulticon-compatibility"
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css"
 
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+export default function MyMap(props: any) {
+  const { position, zoom } = props
 
-const Map = () => {
-  return (
-    <MapContainer
-      center={[37.7749, -122.4194]} // Default to San Francisco
-      zoom={10}
-      style={{ height: "500px", width: "100%" }}
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution="&copy; OpenStreetMap contributors"
-      />
-      <Marker position={[37.7749, -122.4194]}>
-        <Popup>San Francisco</Popup>
-      </Marker>
-    </MapContainer>
-  );
-};
-
-export default Map;
+  return <MapContainer center={position} zoom={zoom} scrollWheelZoom={false}>
+    <TileLayer
+      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    />
+    <Marker position={position}>
+      <Popup>
+        A pretty CSS3 popup. <br /> Easily customizable.
+      </Popup>
+    </Marker>
+  </MapContainer>
+}
