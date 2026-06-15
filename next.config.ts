@@ -1,7 +1,17 @@
 import type { NextConfig } from "next";
 
+const canonicalWhereToMoveHost = "https://wheretomove.placesignals.com";
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        destination: `${canonicalWhereToMoveHost}/:path*`,
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
