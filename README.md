@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Where to Move Redirect Site
 
-## Getting Started
+This repository owns the redirect-only behavior for the defensive/marketing domain `where-to-move.com`.
 
-First, run the development server:
+## Canonical URL strategy
+
+| Surface | URL | Role |
+| --- | --- | --- |
+| Canonical product app | `https://wheretomove.placesignals.com` | Primary Where to Move app destination |
+| Redirect-only domain | `https://where-to-move.com` | Defensive/marketing domain that redirects to the canonical app |
+| Redirect-only www domain | `https://www.where-to-move.com` | Should also redirect to the canonical app |
+| Parent brand | `https://placesignals.com` | Place Signals suite marketing shell |
+
+`where-to-move.com` should not become a second canonical product app. It should preserve path and query strings while redirecting to `wheretomove.placesignals.com`.
+
+## Implementation
+
+`next.config.ts` defines a permanent Next.js redirect:
+
+```ts
+source: "/:path*"
+destination: "https://wheretomove.placesignals.com/:path*"
+permanent: true
+```
+
+This means:
+
+```text
+https://where-to-move.com/sample/path?x=1
+```
+
+should resolve to:
+
+```text
+https://wheretomove.placesignals.com/sample/path?x=1
+```
+
+## Local development
+
+Install dependencies:
+
+```bash
+npm ci
+```
+
+Run the dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Build:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Validation
 
-## Learn More
+After deployment, verify DNS, SSL, and redirect behavior:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+curl -I https://where-to-move.com
+curl -I https://www.where-to-move.com
+curl -I "https://where-to-move.com/sample/path?x=1"
+curl -I https://wheretomove.placesignals.com
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Expected result:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- root redirects to `https://wheretomove.placesignals.com`;
+- `www` redirects to the same canonical host;
+- path and query strings are preserved;
+- HTTPS works without certificate errors;
+- there is no redirect loop.
 
-## Deploy on Vercel
+## Role boundaries
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This repo owns:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- redirect-only behavior;
+- DNS/SSL/deploy verification notes;
+- defensive domain handoff.
+
+This repo does not own:
+
+- the canonical Where to Move product UI;
+- consumer relocation scoring;
+- Place Signals API logic;
+- owner/architecture documentation.
+
+Canonical architecture source of truth: `strongdan/place-signal-architecture`.
