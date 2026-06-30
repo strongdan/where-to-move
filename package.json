@@ -6,11 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "launch:local": "npm run validate:redirect && npm run build",
+    "validate:redirect": "node scripts/validate-redirect-config.mjs",
+    "smoke:redirect": "node scripts/smoke-deployed-redirect.mjs"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
+    "@microsoft/clarity": "^1.0.2",
     "@supabase/supabase-js": "^2.48.1",
     "appwrite": "^14.0.1",
     "autoprefixer": "^10.4.20",
