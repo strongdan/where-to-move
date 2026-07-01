@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { MicrosoftClarity } from "@components/MicrosoftClarity";
 import "./globals.css"; // Import Tailwind styles
 
 const canonicalWhereToMoveHost = "https://where-to-move.placesignals.com";
@@ -50,7 +49,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             style={{ display: "none", visibility: "hidden" }}
           />
         </noscript>
-        <MicrosoftClarity />
         {children}
       </body>
     </html>
