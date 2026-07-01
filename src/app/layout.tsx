@@ -25,10 +25,20 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-M9NJ3S7C');
 `;
 
+const googleAnalyticsScript = `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-0LDTF74TC3');
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-0LDTF74TC3" />
+        <script>{googleAnalyticsScript}</script>
         <script>{googleTagManagerScript}</script>
       </head>
       <body>
