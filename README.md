@@ -15,13 +15,17 @@ This repository owns the redirect-only behavior for the defensive/marketing doma
 
 ## Implementation
 
-`next.config.ts` defines a permanent Next.js redirect:
+`next.config.ts` defines the legacy Vercel permanent redirect:
 
 ```ts
 source: "/:path*"
 destination: "https://wheretomove.placesignals.com/:path*"
 permanent: true
 ```
+
+The Cloudflare replacement is `cloudflare/redirect-worker.mjs`, configured by `wrangler.jsonc`. It returns an HTTP 308 redirect to the canonical host while preserving the incoming path and query string. The Worker intentionally has no production Custom Domain declared in repository configuration: attach `where-to-move.com` and `www.where-to-move.com` only through the authorized Cloudflare DNS/Workers cutover after the Worker is deployed and verified.
+
+Automatic Vercel Git deployments are disabled by `vercel.json`. Keep the existing known-good Vercel production deployment only as rollback until the Cloudflare custom-domain cutover is verified.
 
 This means:
 
@@ -34,6 +38,16 @@ should resolve to:
 ```text
 https://wheretomove.placesignals.com/sample/path?x=1
 ```
+
+## Cloudflare deployment
+
+Deploy the redirect Worker from an authenticated Cloudflare environment:
+
+```bash
+npx wrangler deploy
+```
+
+Verify the generated `workers.dev` URL before attaching production domains. Then attach both redirect-only hostnames as Worker Custom Domains and verify TLS plus redirect semantics before removing the Vercel domain bindings.
 
 ## Local development
 
