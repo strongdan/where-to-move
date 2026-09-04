@@ -1,0 +1,6 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "where-to-move-redirect",
+  "main": "cloudflare/redirect-worker.mjs",
+  "compatibility_date": "2026-09-04"
+}
